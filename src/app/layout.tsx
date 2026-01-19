@@ -1,31 +1,17 @@
-import { cookies } from 'next/headers';
-import { getUserFromToken } from '../lib/auth';
-import LoginPage from './login/page';
+import { LanguageProvider } from '../lib/language-context';
+import './globals.css'; // if you have it
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // ✅ Next.js 15+ async cookies
-  const cookieStore = await cookies();
-  const token = cookieStore.get('token')?.value;
-  const user = token ? await getUserFromToken(token) : null;
-  
-  if (!user) {
-    return (
-      <html lang="en">
-        <body>
-          <LoginPage />
-        </body>
-      </html>
-    );
-  }
-  
   return (
     <html lang="en">
       <body>
+        <LanguageProvider>
           {children}
+        </LanguageProvider>
       </body>
     </html>
   );

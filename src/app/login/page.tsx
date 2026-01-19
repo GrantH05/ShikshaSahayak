@@ -1,6 +1,45 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import LanguageToggle from '../../../components/LanguageToggle';
+import { useLanguage } from '../../lib/language-context';
+
+const translations = {
+  en: {
+    title: '👨‍🏫 Teacher Assistant',
+    subtitle: 'Login with your teacher account',
+    email: 'Email',
+    emailPlaceholder: 'teacher@school.com',
+    password: 'Password',
+    login: 'Login',
+    loggingIn: 'Logging in...',
+    demoAccount: 'Demo Account:',
+    demoEmail: 'teacher@school.com',
+    demoPassword: '123456',
+    error: {
+      invalid: 'Invalid email or password',
+      network: 'Network error. Please try again.',
+      required: 'Email and password required'
+    }
+  },
+  hi: {
+    title: '👨‍🏫 शिक्षक सहायक',
+    subtitle: 'अपने शिक्षक खाते से लॉगिन करें',
+    email: 'ईमेल',
+    emailPlaceholder: 'teacher@school.com',
+    password: 'पासवर्ड',
+    login: 'लॉगिन करें',
+    loggingIn: 'लॉगिन हो रहा है...',
+    demoAccount: 'डेमो अकाउंट:',
+    demoEmail: 'teacher@school.com',
+    demoPassword: '123456',
+    error: {
+      invalid: 'गलत ईमेल या पासवर्ड',
+      network: 'नेटवर्क त्रुटि। कृपया पुनः प्रयास करें।',
+      required: 'ईमेल और पासवर्ड आवश्यक'
+    }
+  }
+};
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -8,11 +47,19 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
+  const { language } = useLanguage();
+  const t = translations[language];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    if (!email || !password) {
+      setError(t.error.required);
+      setLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch('/api/auth/login', {
@@ -27,10 +74,10 @@ export default function LoginPage() {
         router.push('/dashboard');
         router.refresh();
       } else {
-        setError(data.error || 'Login failed');
+        setError(data.error || t.error.invalid);
       }
     } catch (err) {
-      setError('Network error. Please try again.');
+      setError(t.error.network);
     } finally {
       setLoading(false);
     }
@@ -47,77 +94,103 @@ export default function LoginPage() {
       fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
       <div style={{
-        background: 'white',
-        padding: '3rem',
-        borderRadius: '2rem',
+        background: 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(20px)',
+        padding: '3rem 3.5rem',
+        borderRadius: '2.5rem',
         boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
         width: '100%',
-        maxWidth: '450px'
+        maxWidth: '450px',
+        border: '1px solid rgba(255, 255, 255, 0.2)'
       }}>
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        {/* Header */}
+        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h1 style={{
-            fontSize: '2.5rem',
+            fontSize: '2.75rem',
             fontWeight: 'bold',
             background: 'linear-gradient(135deg, #667eea, #764ba2)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
-            marginBottom: '0.5rem'
+            marginBottom: '1rem',
+            lineHeight: '1.2'
           }}>
-            👨‍🏫 शिक्षक सहायक
+            {t.title}
           </h1>
-          <p style={{ color: '#64748b', fontSize: '1.1rem' }}>
-            अपने शिक्षक खाते से लॉगिन करें
+          <p style={{ color: '#64748b', fontSize: '1.15rem', margin: 0 }}>
+            {t.subtitle}
           </p>
+          <div style={{ marginTop: '1.5rem' }}>
+            <LanguageToggle />
+          </div>
         </div>
 
+        {/* Error */}
         {error && (
           <div style={{
             background: '#fee2e2',
             color: '#dc2626',
-            padding: '1rem',
+            padding: '1.25rem',
             borderRadius: '1rem',
-            marginBottom: '1.5rem',
-            borderLeft: '4px solid #dc2626'
+            marginBottom: '2rem',
+            borderLeft: '5px solid #dc2626',
+            boxShadow: '0 4px 12px rgba(220, 38, 38, 0.15)'
           }}>
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        {/* Form */}
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: '#374151' }}>
-              Email
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '0.75rem', 
+              fontWeight: '600', 
+              color: '#374151',
+              fontSize: '1.05rem'
+            }}>
+              {t.email}
             </label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="teacher@school.com"
+              placeholder={t.emailPlaceholder}
               required
+              disabled={loading}
               style={{
                 width: '100%',
-                padding: '1rem 1.25rem',
+                padding: '1.25rem 1.5rem',
                 border: '2px solid #e5e7eb',
-                borderRadius: '1rem',
-                fontSize: '1rem',
-                transition: 'all 0.2s',
-                outline: 'none'
+                borderRadius: '1.25rem',
+                fontSize: '1.05rem',
+                transition: 'all 0.25s',
+                outline: 'none',
+                background: 'white',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
               }}
               onFocus={(e) => {
                 e.target.style.borderColor = '#3b82f6';
-                e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+                e.target.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.1)';
+                e.target.style.transform = 'translateY(-2px)';
               }}
               onBlur={(e) => {
                 e.target.style.borderColor = '#e5e7eb';
-                e.target.style.boxShadow = 'none';
+                e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+                e.target.style.transform = 'translateY(0)';
               }}
-              disabled={loading}
             />
           </div>
 
           <div>
-            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600', color: '#374151' }}>
-              Password
+            <label style={{ 
+              display: 'block', 
+              marginBottom: '0.75rem', 
+              fontWeight: '600', 
+              color: '#374151',
+              fontSize: '1.05rem'
+            }}>
+              {t.password}
             </label>
             <input
               type="password"
@@ -125,54 +198,90 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••"
               required
+              disabled={loading}
               style={{
                 width: '100%',
-                padding: '1rem 1.25rem',
+                padding: '1.25rem 1.5rem',
                 border: '2px solid #e5e7eb',
-                borderRadius: '1rem',
-                fontSize: '1rem',
-                transition: 'all 0.2s',
-                outline: 'none'
+                borderRadius: '1.25rem',
+                fontSize: '1.05rem',
+                transition: 'all 0.25s',
+                outline: 'none',
+                background: 'white',
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
               }}
               onFocus={(e) => {
                 e.target.style.borderColor = '#3b82f6';
-                e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+                e.target.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.1)';
+                e.target.style.transform = 'translateY(-2px)';
               }}
               onBlur={(e) => {
                 e.target.style.borderColor = '#e5e7eb';
-                e.target.style.boxShadow = 'none';
+                e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+                e.target.style.transform = 'translateY(0)';
               }}
-              disabled={loading}
             />
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <button
-              type="submit"
-              disabled={loading || !email || !password}
-              style={{
-                padding: '1.25rem',
-                background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '1rem',
-                fontSize: '1.1rem',
-                fontWeight: '600',
-                cursor: loading || !email || !password ? 'not-allowed' : 'pointer',
-                opacity: loading || !email || !password ? 0.6 : 1,
-                boxShadow: '0 10px 25px rgba(59, 130, 246, 0.4)',
-                transition: 'all 0.2s'
-              }}
-            >
-              {loading ? '⏳ लॉगिन हो रहा है...' : 'लॉगिन करें'}
-            </button>
-            
-            <div style={{ textAlign: 'center', padding: '1rem', background: '#f8fafc', borderRadius: '1rem', fontSize: '0.95rem' }}>
-              <strong>डेमो अकाउंट:</strong><br/>
-              teacher@school.com / 123456
-            </div>
-          </div>
+          <button
+            type="submit"
+            disabled={loading || !email || !password}
+            style={{
+              padding: '1.5rem 2rem',
+              background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '1.25rem',
+              fontSize: '1.15rem',
+              fontWeight: '700',
+              cursor: loading || !email || !password ? 'not-allowed' : 'pointer',
+              boxShadow: '0 10px 25px rgba(59, 130, 246, 0.4)',
+              transition: 'all 0.3s ease',
+              opacity: loading || !email || !password ? 0.7 : 1,
+              position: 'relative',
+              overflow: 'hidden'
+            }}
+            onMouseOver={(e) => {
+              if (!loading && email && password) {
+                e.currentTarget.style.transform = 'translateY(-3px)';
+                e.currentTarget.style.boxShadow = '0 15px 35px rgba(59, 130, 246, 0.5)';
+              }
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 10px 25px rgba(59, 130, 246, 0.4)';
+            }}
+          >
+            {loading ? (
+              <>
+                <span style={{ marginRight: '1rem' }}>⏳</span>
+                {t.loggingIn}
+              </>
+            ) : (
+              t.login
+            )}
+          </button>
         </form>
+
+        {/* Demo Info */}
+        <div style={{ 
+          marginTop: '2rem', 
+          padding: '1.5rem', 
+          background: 'rgba(59, 130, 246, 0.1)', 
+          borderRadius: '1.25rem', 
+          textAlign: 'center',
+          border: '2px dashed rgba(59, 130, 246, 0.3)'
+        }}>
+          <div style={{ fontWeight: '700', fontSize: '1.1rem', color: '#1e40af', marginBottom: '0.5rem' }}>
+            {t.demoAccount}
+          </div>
+          <div style={{ color: '#1e40af', marginBottom: '0.25rem' }}>
+            📧 {t.demoEmail}
+          </div>
+          <div style={{ color: '#1e40af' }}>
+            🔑 {t.demoPassword}
+          </div>
+        </div>
       </div>
     </div>
   );

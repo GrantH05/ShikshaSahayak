@@ -1,35 +1,60 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { Globe } from 'lucide-react';
+import { useLanguage } from '../src/lib/language-context';
 
-interface Props {
-  lang: 'en' | 'hi';
-  onChange: (lang: 'en' | 'hi') => void;
-}
+export default function LanguageToggle() {
+  const { language, setLanguage } = useLanguage();
 
-export default function LanguageToggle({ lang, onChange }: Props) {
   return (
-    <div className="flex mt-4 space-x-2 bg-white/50 rounded-full p-1 max-w-max mx-auto">
+    <div style={{
+      display: 'flex',
+      gap: '0.5rem',
+      padding: '0.5rem 1rem',
+      background: 'rgba(255,255,255,0.9)',
+      borderRadius: '2rem',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+      fontWeight: '500'
+    }}>
       <button
-        onClick={() => onChange('en')}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center space-x-1 ${
-          lang === 'en'
-            ? 'bg-blue-500 text-white shadow-lg'
-            : 'text-gray-700 hover:bg-gray-100'
-        }`}
+        onClick={() => setLanguage('en')}
+        style={{
+          padding: '0.75rem 1.5rem',
+          borderRadius: '1.5rem',
+          border: 'none',
+          background: language === 'en' ? '#3b82f6' : 'transparent',
+          color: language === 'en' ? 'white' : '#374151',
+          cursor: 'pointer',
+          transition: 'all 0.2s',
+          fontWeight: '600'
+        }}
+        onMouseOver={(e) => {
+          if (language !== 'en') e.currentTarget.style.background = '#e0e7ff';
+        }}
+        onMouseOut={(e) => {
+          if (language !== 'en') e.currentTarget.style.background = 'transparent';
+        }}
       >
-        <Globe className="w-4 h-4" />
-        <span>EN</span>
+        EN
       </button>
       <button
-        onClick={() => onChange('hi')}
-        className={`px-4 py-2 rounded-full text-sm font-medium transition-all flex items-center space-x-1 ${
-          lang === 'hi'
-            ? 'bg-orange-500 text-white shadow-lg'
-            : 'text-gray-700 hover:bg-gray-100'
-        }`}
+        onClick={() => setLanguage('hi')}
+        style={{
+          padding: '0.75rem 1.5rem',
+          borderRadius: '1.5rem',
+          border: 'none',
+          background: language === 'hi' ? '#8b5cf6' : 'transparent',
+          color: language === 'hi' ? 'white' : '#374151',
+          cursor: 'pointer',
+          transition: 'all 0.2s',
+          fontWeight: '600'
+        }}
+        onMouseOver={(e) => {
+          if (language !== 'hi') e.currentTarget.style.background = '#ede9fe';
+        }}
+        onMouseOut={(e) => {
+          if (language !== 'hi') e.currentTarget.style.background = 'transparent';
+        }}
       >
-        <span>हिं</span>
+        हिं
       </button>
     </div>
   );
