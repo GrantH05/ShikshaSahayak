@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import LanguageToggle from '../../../components/LanguageToggle';
 import { useLanguage } from '../../lib/language-context';
 
@@ -33,6 +34,27 @@ interface TProfile {
   joined: string;
 }
 
+const theme = {
+  primary: '#6366f1',
+  primaryDark: '#4f46e5',
+  secondary: '#10b981',
+  accent: '#f59e0b',
+  danger: '#ef4444',
+  surface: 'rgba(255, 255, 255, 0.9)',
+  glass: 'rgba(255, 255, 255, 0.25)',
+  backdrop: 'rgba(255, 255, 255, 0.75)',
+  shadows: {
+    card: '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
+    glass: '0 8px 32px rgba(31, 38, 135, 0.25)',
+    hover: '0 20px 40px rgba(99, 102, 241, 0.3)'
+  },
+  radius: {
+    card: '24px',
+    button: '16px'
+  }
+};
+
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [isClient, setIsClient] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -40,6 +62,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const t = translations[language];
   const [profile, setProfile] = useState<TProfile | " ">(" ");
   const [loading, setLoading] = useState(true);
+
+  const [error, setError] = useState('');
+  
+  // ✅ DETECT CURRENT PAGE
+  const pathname = usePathname();
+  const isDashboard = pathname === '/dashboard';
+
 
   const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -79,16 +108,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     setIsClient(true);
   }, []);
 
-  if (!isClient) {
+  if (!isClient || loading) {
     return (
       <div style={{ 
         minHeight: '100vh', 
-        background: '#f8fafc',
+        background: `linear-gradient(135deg, ${theme.primary}20, ${theme.secondary}20)`,
         display: 'flex', 
         alignItems: 'center', 
         justifyContent: 'center' 
       }}>
-        <div style={{ fontSize: '2rem', color: '#64748b' }}>Loading...</div>
+        <div style={{ 
+          fontSize: '2rem', 
+          color: theme.primary,
+          background: theme.surface,
+          padding: '2rem 4rem',
+          borderRadius: theme.radius.card,
+          boxShadow: theme.shadows.card
+        }}>
+          Loading...
+        </div>
       </div>
     );
   }
@@ -96,68 +134,85 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div style={{ 
       minHeight: '100vh', 
-      background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+      background: `radial-gradient(ellipse at top left, ${theme.primary}10 0%, #f8fafc 50%)`,
       display: 'flex' 
     }}>
-      {/* Sidebar */}
+      {/* Sidebar - UNCHANGED */}
       <div style={{
-        width: sidebarOpen ? '280px' : '80px',
-        background: 'linear-gradient(180deg, #1e293b 0%, #334155 100%)',
+        width: sidebarOpen ? '300px' : '85px',
+        background: `linear-gradient(145deg, rgba(15,23,42,0.95), rgba(30,41,59,0.95))`,
+        backdropFilter: 'blur(25px)',
         color: 'white',
-        transition: 'all 0.3s ease',
+        transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
         height: '100vh',
         position: 'fixed',
         zIndex: 100,
         overflow: 'hidden',
-        boxShadow: '4px 0 20px rgba(0,0,0,0.1)'
+        boxShadow: theme.shadows.glass
       }}>
-        {/* Profile Section */}
         <div style={{ 
-          padding: '2rem 1.5rem', 
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
+          padding: '2.5rem 2rem', 
+          borderBottom: '1px solid rgba(255,255,255,0.12)',
           display: 'flex', 
           alignItems: 'center', 
-          gap: sidebarOpen ? '1rem' : '0'
+          gap: sidebarOpen ? '1.25rem' : '0'
         }}>
           <div style={{
-            width: '50px', height: '50px',
-            background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
-            borderRadius: '50%',
+            width: '60px', height: '60px',
+            background: `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`,
+            borderRadius: '20px',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '1.5rem', fontWeight: 'bold',
+            fontSize: '1.75rem', fontWeight: 'bold',
+            boxShadow: theme.shadows.card,
             flexShrink: 0
           }}>
             👨‍🏫
           </div>
-          {sidebarOpen && (
+          {sidebarOpen && profile && (
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: '1.1rem', fontWeight: '600', whiteSpace: 'nowrap' }}>
+              <div style={{ 
+                fontSize: '1.125rem', 
+                fontWeight: '700', 
+                marginBottom: '0.25rem',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis'
+              }}>
                 {profile.name}
               </div>
-              <div style={{ fontSize: '0.85rem', opacity: 0.8 }}>{profile.role}</div>
+              <div style={{ 
+                fontSize: '0.875rem', 
+                opacity: 0.85 
+              }}>
+                {profile.role}
+              </div>
             </div>
           )}
         </div>
 
-        {/* Navigation */}
-        <nav style={{ padding: '2rem 0', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <Link href="/dashboard" style={navStyle(true)}>📊 {sidebarOpen && t.dashboardNav}</Link>
-          <Link href="/dashboard/chat" style={navStyle()}>💬 {sidebarOpen && t.chatNav}</Link>
-          <Link href="/dashboard/history" style={navStyle()}>📚 {sidebarOpen && t.historyNav}</Link>
-          <Link href="/dashboard/profile" style={navStyle()}>👤 {sidebarOpen && t.profileNav}</Link>
+        <nav style={{ padding: '2.5rem 0', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          {/* ✅ FIXED: Proper active state for EACH page */}
+          <NavLink href="/dashboard" label={t.dashboardNav} icon="📊" active={pathname === '/dashboard'} sidebarOpen={sidebarOpen} />
+          <NavLink href="/dashboard/chat" label={t.chatNav} icon="💬" active={pathname === '/dashboard/chat'} sidebarOpen={sidebarOpen} />
+          <NavLink href="/dashboard/history" label={t.historyNav} icon="📚" active={pathname === '/dashboard/history'} sidebarOpen={sidebarOpen} />
+          <NavLink href="/dashboard/profile" label={t.profileNav} icon="👤" active={pathname === '/dashboard/profile'} sidebarOpen={sidebarOpen} />
         </nav>
 
-        {/* Sidebar Toggle */}
+
         <div style={{
-          position: 'absolute', bottom: '2rem', left: '50%',
+          position: 'absolute', bottom: '2.5rem', left: '50%',
           transform: 'translateX(-50%)',
-          cursor: 'pointer', padding: '0.75rem',
-          background: 'rgba(255,255,255,0.1)', borderRadius: '50%',
-          backdropFilter: 'blur(10px)',
-          transition: 'all 0.2s'
+          width: '52px', height: '52px',
+          background: 'rgba(255,255,255,0.15)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '16px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          cursor: 'pointer',
+          transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          border: '1px solid rgba(255,255,255,0.2)'
         }} 
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        title={sidebarOpen ? 'Collapse' : 'Expand'}
+        title={sidebarOpen ? 'Collapse Sidebar' : 'Expand Sidebar'}
         >
           {sidebarOpen ? '◀️' : '▶️'}
         </div>
@@ -165,106 +220,158 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* Main Content */}
       <div style={{
-        marginLeft: sidebarOpen ? '280px' : '80px',
+        marginLeft: sidebarOpen ? '300px' : '85px',
         flex: 1,
-        padding: '2rem',
-        transition: 'margin-left 0.3s ease',
+        padding: '2.5rem',
+        transition: 'margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
         minHeight: '100vh'
       }}>
-        {/* Top Header */}
-        <div style={{
-          background: 'white',
-          padding: '1.5rem 2rem',
-          borderRadius: '1.5rem',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
-          marginBottom: '2rem',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          position: 'sticky',
-          top: '2rem',
-          zIndex: 50
-        }}>
-          <div>
-            <h1 style={{ 
-              fontSize: '2.5rem', 
-              fontWeight: 'bold', 
-              color: '#1e293b',
-              margin: 0
-            }}>
-              {t.dashboard}
-            </h1>
-          </div>
-          
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <LanguageToggle />
-            <button 
-              onClick={() => {
-                document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-                window.location.href = '/login';
-              }}
-              style={{
-                padding: '0.75rem 1.5rem',
-                background: 'linear-gradient(135deg, #ef4444, #dc2626)',
-                color: 'white',
-                border: 'none',
-                borderRadius: '1rem',
-                fontWeight: '600',
-                fontSize: '0.95rem',
-                cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(239,68,68,0.3)',
-                transition: 'all 0.2s',
-                whiteSpace: 'nowrap'
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 8px 20px rgba(239,68,68,0.4)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(239,68,68,0.3)';
-              }}
-            >
-              🚪 {t.logout}
-            </button>
-          </div>
-        </div>
+        {/* ✅ CONDITIONAL HEADER - BIG on Dashboard, SMALL on others */}
+        {isDashboard ? (
+          // 🎨 BIG HEADER (Dashboard only)
+          <BigHeader profile={profile} t={t} theme={theme} />
+        ) : (
+          // 🛠️ SMALL HEADER (Other pages)
+          <SmallHeader t={t} theme={theme} />
+        )}
 
-        {/* Page Content */}
+        {/* Content Card */}
         <div style={{ 
-          background: 'white', 
-          borderRadius: '1.5rem', 
-          padding: '2rem', 
-          boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
-          minHeight: '60vh'
+          background: theme.surface,
+          backdropFilter: 'blur(25px)',
+          borderRadius: theme.radius.card, 
+          padding: '2.75rem', 
+          boxShadow: theme.shadows.card,
+          minHeight: '60vh',
+          border: '1px solid rgba(255,255,255,0.2)',
+          marginTop: isDashboard ? '0' : '1.5rem'
         }}>
           {children}
         </div>
       </div>
-
-      <style jsx>{`
-        a:hover {
-          background: rgba(255,255,255,0.15) !important;
-          transform: translateX(4px) !important;
-        }
-      `}</style>
     </div>
   );
 }
 
-function navStyle(active = false) {
-  return {
-    padding: '1.25rem 1.5rem',
-    color: 'white',
-    textDecoration: 'none',
+// 🎨 BIG HEADER - Dashboard Only
+const BigHeader = ({ profile, t, theme }: any) => (
+  <div style={{
+    background: theme.surface,
+    backdropFilter: 'blur(25px)',
+    padding: '2.25rem 2.75rem',
+    borderRadius: theme.radius.card,
+    boxShadow: theme.shadows.card,
+    marginBottom: '2.5rem',
     display: 'flex',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    fontWeight: active ? '700' : '500',
-    fontSize: '1.05rem',
-    transition: 'all 0.2s ease',
-    borderRadius: '0 1rem 1rem 0',
-    margin: '0 0.5rem',
-    position: 'relative'
-  };
-}
+    border: '1px solid rgba(255,255,255,0.2)',
+    position: 'sticky',
+    top: '2.5rem',
+    zIndex: 50
+  }}>
+    <div>
+      <h1 style={{ 
+        fontSize: '2.875rem', 
+        fontWeight: '800', 
+        background: `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`,
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        margin: 0, 
+        lineHeight: '1.15'
+      }}>
+        {t.dashboard}
+      </h1>
+      <p style={{ 
+        color: '#64748b', 
+        margin: '0.875rem 0 0 0',
+        fontSize: '1.125rem',
+        fontWeight: '500'
+      }}>
+        {profile?.joined || '19 Jan 2026'} • {t.assistant}
+      </p>
+    </div>
+    <LanguageToggle />
+  </div>
+);
 
+// 🛠️ SMALL HEADER - Other Pages
+const SmallHeader = ({ t, theme }: any) => (
+  <div style={{
+    background: theme.glass,
+    backdropFilter: 'blur(20px)',
+    padding: '1rem 1.5rem',
+    borderRadius: '16px',
+    boxShadow: theme.shadows.glass,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    border: '1px solid rgba(255,255,255,0.3)',
+    marginBottom: '1rem'
+  }}>
+    <div style={{ fontSize: '1.25rem', fontWeight: '700', color: theme.primary }}>
+      {t.dashboard}
+    </div>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <LanguageToggle />
+      <button 
+        onClick={() => {
+          document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          window.location.href = '/login';
+        }}
+        style={{
+          padding: '0.75rem 1.25rem',
+          background: `linear-gradient(135deg, ${theme.danger}, #dc2626)`,
+          color: 'white',
+          border: 'none',
+          borderRadius: '12px',
+          fontWeight: '600',
+          fontSize: '0.875rem',
+          cursor: 'pointer',
+          boxShadow: '0 8px 25px rgba(239,68,68,0.3)',
+          transition: 'all 0.3s ease'
+        }}
+      >
+        🚪 {t.logout}
+      </button>
+    </div>
+  </div>
+);
+
+// NavLink Component (unchanged)
+const NavLink = ({ href, icon, label, active = false, sidebarOpen }: any) => (
+  <Link 
+    href={href} 
+    style={{
+      padding: '1.375rem 2rem',
+      color: 'white',
+      textDecoration: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '1.25rem',
+      fontWeight: active ? '800' : '600',
+      fontSize: '1.0625rem',
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      borderRadius: '0 24px 24px 0',
+      margin: '0 1rem',
+      position: 'relative',
+      background: active ? 'rgba(255,255,255,0.2)' : 'transparent',
+      boxShadow: active ? '6px 0 24px rgba(255,255,255,0.2)' : 'none'
+    }}
+    onMouseEnter={(e) => {
+      if (!active) {
+        e.currentTarget.style.background = 'rgba(255,255,255,0.15)';
+        e.currentTarget.style.transform = 'translateX(12px)';
+      }
+    }}
+    onMouseLeave={(e) => {
+      if (!active) {
+        e.currentTarget.style.background = 'transparent';
+        e.currentTarget.style.transform = 'translateX(0)';
+      }
+    }}
+  >
+    <span style={{ fontSize: '1.625rem', minWidth: '28px' }}>{icon}</span>
+    {sidebarOpen && <span>{label}</span>}
+  </Link>
+);

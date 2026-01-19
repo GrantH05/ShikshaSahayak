@@ -1,12 +1,30 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
+import { useLanguage } from '../../../lib/language-context'; // 👈 DASHBOARD LANGUAGE!
+
+const theme = {
+  // 👇 EXACT template.js brown colors
+  primary: '#8B4513',      // Saddle brown (main)
+  primaryDark: '#654321',   // Dark brown
+  secondary: '#A0522D',     // Sienna (accent)
+  lightBrown: '#D2B48C',    // Tan/light brown
+  bgGradient: 'linear-gradient(135deg, #f5f5dc 0%, #d2b48c 50%, #deb887 100%)',
+  userBubble: '#8B4513',    // Matches template user messages
+  aiBubble: '#A0522D',      // Matches template AI messages
+  inputBg: '#faf0e6',       // Linen/creamy
+  border: '#D2691E',        // Chocolate border
+  textDark: '#5D4037',      // Dark brown text
+  shadow: 'rgba(139, 69, 19, 0.25)'
+};
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<any[]>([]);
   const [question, setQuestion] = useState('');
   const [loading, setLoading] = useState(false);
-  const [language, setLanguage] = useState<'en' | 'hi'>('en');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  
+  // ✅ USE DASHBOARD LANGUAGE CONTEXT (no separate toggle!)
+  const { language } = useLanguage(); 
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -37,7 +55,7 @@ export default function ChatPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           question: userMessage.question,
-          language
+          language  // 👈 Sends dashboard language to API!
         })
       });
 
@@ -57,6 +75,20 @@ export default function ChatPage() {
     }
   };
 
+  // ✅ DYNAMIC TEXT BASED ON DASHBOARD LANGUAGE
+  const t = {
+    title: language === 'hi' ? '🤖 AI शिक्षक सहायक' : '🤖 AI Teacher Assistant',
+    subtitle: language === 'hi' ? 'प्रश्न पूछें, तुरंत उत्तर पाएं!' : 'Ask questions, get instant answers!',
+    emptyTitle: language === 'hi' ? 'कोई बातचीत शुरू करें' : 'Start a conversation',
+    emptySubtitle: language === 'hi' ? 'यहाँ अपना पहला प्रश्न लिखें' : 'Write your first question here',
+    yourQuestion: language === 'hi' ? 'आपका प्रश्न:' : 'Your question:',
+    aiThinking: language === 'hi' ? 'AI सोच रहा है...' : 'AI is thinking...',
+    send: language === 'hi' ? 'भेजें' : 'Send',
+    placeholder: language === 'hi' 
+      ? "अपना प्रश्न यहाँ लिखें... (Enter दबाएं भेजने के लिए)"
+      : "Type your question here... (Press Enter to send)"
+  };
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -66,59 +98,20 @@ export default function ChatPage() {
     }}>
       <div style={{ maxWidth: '800px', margin: '0 auto' }}>
         
-        {/* Header */}
+        {/* Header - DYNAMIC LANGUAGE */}
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <h1 style={{
-            fontSize: '3rem',
-            fontWeight: 'bold',
-            background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            marginBottom: '1rem'
-          }}>
-            🤖 AI शिक्षक सहायक
-          </h1>
+        <h1 style={{
+          fontSize: '3rem',
+          fontWeight: 'bold',
+          background: `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          textShadow: '2px 2px 4px rgba(0,0,0,0.1)',
+          marginBottom: '1rem'
+        }}>{t.title}</h1>
           <p style={{ fontSize: '1.25rem', color: '#64748b' }}>
-            {language === 'hi' ? 'प्रश्न पूछें, तुरंत उत्तर पाएं!' : 'Ask questions, get instant answers!'}
+            {t.subtitle}
           </p>
-          
-          {/* Language Toggle */}
-          <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'center', gap: '1rem' }}>
-            <button
-              onClick={() => setLanguage('en')}
-              style={{
-                padding: '0.75rem 1.5rem',
-                borderRadius: '1.5rem',
-                fontWeight: '600',
-                border: '2px solid #3b82f6',
-                background: language === 'en' ? '#3b82f6' : 'white',
-                color: language === 'en' ? 'white' : '#3b82f6',
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-              onMouseOver={(e: any) => { e.target.style.transform = 'scale(1.05)'; }}
-              onMouseOut={(e: any) => { e.target.style.transform = 'scale(1)'; }}
-            >
-              English
-            </button>
-            <button
-              onClick={() => setLanguage('hi')}
-              style={{
-                padding: '0.75rem 1.5rem',
-                borderRadius: '1.5rem',
-                fontWeight: '600',
-                border: '2px solid #8b5cf6',
-                background: language === 'hi' ? '#8b5cf6' : 'white',
-                color: language === 'hi' ? 'white' : '#8b5cf6',
-                cursor: 'pointer',
-                transition: 'all 0.2s'
-              }}
-              onMouseOver={(e: any) => { e.target.style.transform = 'scale(1.05)'; }}
-              onMouseOut={(e: any) => { e.target.style.transform = 'scale(1)'; }}
-            >
-              हिंदी
-            </button>
-          </div>
         </div>
 
         {/* Messages */}
@@ -129,8 +122,8 @@ export default function ChatPage() {
           padding: '2rem',
           background: 'white',
           borderRadius: '2rem',
-          boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.1)',
-          border: '1px solid #e2e8f0',
+          boxShadow: '0 25px 50px ${theme.shadow}',
+          border: '1px solid ${theme.border}',
           minHeight: '400px',
           maxHeight: '60vh'
         }}>
@@ -138,43 +131,48 @@ export default function ChatPage() {
             <div style={{ textAlign: 'center', padding: '4rem 2rem', color: '#94a3b8' }}>
               <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>💬</div>
               <h3 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '0.5rem' }}>
-                {language === 'hi' ? 'कोई बातचीत शुरू करें' : 'Start a conversation'}
+                {t.emptyTitle}
               </h3>
-              <p>{language === 'hi' ? 'यहाँ अपना पहला प्रश्न लिखें' : 'Write your first question here'}</p>
+              <p>{t.emptySubtitle}</p>
             </div>
           ) : (
             messages.map((msg: any) => (
               <div key={msg.id} style={{ marginBottom: '2rem' }}>
+                {/* User message - RIGHT */}
                 <div style={{
                   display: 'flex',
-                  justifyContent: 'flex-start',
+                  justifyContent: 'flex-end',
                   marginBottom: '1.5rem'
                 }}>
                   <div style={{
-                    background: '#3b82f6',
+                    background: theme.userBubble,
                     color: 'white',
                     padding: '1rem 1.5rem',
-                    borderRadius: '1.5rem 1.5rem 1.5rem 0.5rem',
+                    borderRadius: '1.5rem 1.5rem 0.5rem 1.5rem',
                     maxWidth: '70%',
-                    boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+                    boxShadow: '0 4px 12px ${theme.shadow}'
                   }}>
-                    <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>आपका प्रश्न:</p>
+                    <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>
+                      {t.yourQuestion}
+                    </p>
                     <p>{msg.question}</p>
                   </div>
                 </div>
                 
+                {/* AI message - LEFT */}
                 {msg.answer && (
                   <div style={{
                     display: 'flex',
-                    justifyContent: 'flex-end'
+                    justifyContent: 'flex-start',
+                    marginBottom: '1.5rem'
                   }}>
                     <div style={{
-                      background: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+                      background: 'linear-gradient(135deg, #654321, #D2B48C)',
                       color: 'white',
                       padding: '1.5rem 2rem',
-                      borderRadius: '1.5rem 1.5rem 0.5rem 1.5rem',
+                      borderRadius: '1.5rem 1.5rem 1.5rem 0.5rem',
                       maxWidth: '75%',
-                      boxShadow: '0 10px 25px rgba(139, 92, 246, 0.4)',
+                      boxShadow: '0 10px 25px rgba(139, 69, 19, 0.25)',
                       whiteSpace: 'pre-wrap'
                     }}>
                       {msg.answer}
@@ -185,13 +183,15 @@ export default function ChatPage() {
             ))
           )}
           
+          {/* Loading - LEFT */}
           {loading && (
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
               <div style={{
                 background: '#f1f5f9',
                 padding: '1.5rem 2rem',
                 borderRadius: '1.5rem 1.5rem 0.5rem 1.5rem',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                maxWidth: '75%'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
                   <div style={{
@@ -203,8 +203,8 @@ export default function ChatPage() {
                     animation: 'spin 1s linear infinite'
                   }}></div>
                   <span style={{ color: '#64748b' }}>
-                    {language === 'hi' ? 'AI सोच रहा है...' : 'AI is thinking...'}
-                </span>
+                    {t.aiThinking}
+                  </span>
                 </div>
               </div>
             </div>
@@ -232,16 +232,13 @@ export default function ChatPage() {
                     sendMessage();
                   }
                 }}
-                placeholder={
-                  language === 'hi'
-                    ? "अपना प्रश्न यहाँ लिखें... (Enter दबाएं भेजने के लिए)"
-                    : "Type your question here... (Press Enter to send)"
-                }
+                placeholder={t.placeholder}
                 style={{
                   flex: 1,
                   padding: '1.25rem',
-                  border: '2px solid #e2e8f0',
+                  border: '2px solid ${theme.border}',
                   borderRadius: '1.5rem',
+                    background: theme.inputBg,
                   resize: 'none',
                   outline: 'none',
                   fontSize: '1rem',
@@ -256,18 +253,18 @@ export default function ChatPage() {
                 disabled={loading || !question.trim()}
                 style={{
                   padding: '1.25rem 2rem',
-                  background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+                  background: 'linear-gradient(135deg, #654321, #D2B48C)',
                   color: 'white',
                   fontWeight: '600',
                   borderRadius: '1.5rem',
                   border: 'none',
                   cursor: loading || !question.trim() ? 'not-allowed' : 'pointer',
                   opacity: loading || !question.trim() ? 0.6 : 1,
-                  boxShadow: '0 10px 25px rgba(59, 130, 246, 0.4)',
+                  boxShadow: '0 10px 25px rgba(139, 69, 19, 0.25)',
                   transition: 'all 0.2s'
                 }}
               >
-                {loading ? '⏳' : 'भेजें'}
+                {loading ? '⏳' : t.send} {/* ✅ DYNAMIC SEND BUTTON! */}
               </button>
             </div>
           </div>
