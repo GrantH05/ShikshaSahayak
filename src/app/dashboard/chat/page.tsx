@@ -92,7 +92,7 @@ export default function ChatPage() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #e0e7ff 100%)',
+      background: '#ffffff',
       padding: '2rem',
       fontFamily: 'system-ui, -apple-system, sans-serif'
     }}>
@@ -103,13 +103,12 @@ export default function ChatPage() {
         <h1 style={{
           fontSize: '3rem',
           fontWeight: 'bold',
-          background: `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`,
+          background: `#006400`,
           WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
           textShadow: '2px 2px 4px rgba(0,0,0,0.1)',
           marginBottom: '1rem'
         }}>{t.title}</h1>
-          <p style={{ fontSize: '1.25rem', color: '#64748b' }}>
+          <p style={{ fontSize: '1.25rem', color: '#000000' }}>
             {t.subtitle}
           </p>
         </div>
@@ -130,7 +129,7 @@ export default function ChatPage() {
           {messages.length === 0 ? (
             <div style={{ textAlign: 'center', padding: '4rem 2rem', color: '#94a3b8' }}>
               <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>💬</div>
-              <h3 style={{ fontSize: '1.5rem', fontWeight: '600', marginBottom: '0.5rem' }}>
+              <h3 style={{ fontSize: '1.5rem', colo: "#000000", fontWeight: '600', marginBottom: '0.5rem' }}>
                 {t.emptyTitle}
               </h3>
               <p>{t.emptySubtitle}</p>
@@ -145,7 +144,7 @@ export default function ChatPage() {
                   marginBottom: '1.5rem'
                 }}>
                   <div style={{
-                    background: theme.userBubble,
+                    background: "#006400",
                     color: 'white',
                     padding: '1rem 1.5rem',
                     borderRadius: '1.5rem 1.5rem 0.5rem 1.5rem',
@@ -167,8 +166,8 @@ export default function ChatPage() {
                     marginBottom: '1.5rem'
                   }}>
                     <div style={{
-                      background: 'linear-gradient(135deg, #654321, #D2B48C)',
-                      color: 'white',
+                      background: '#abf7b1',
+                      color: '#000000',
                       padding: '1.5rem 2rem',
                       borderRadius: '1.5rem 1.5rem 1.5rem 0.5rem',
                       maxWidth: '75%',
@@ -238,7 +237,7 @@ export default function ChatPage() {
                   padding: '1.25rem',
                   border: '2px solid ${theme.border}',
                   borderRadius: '1.5rem',
-                    background: theme.inputBg,
+                  background: "#abf7b1",
                   resize: 'none',
                   outline: 'none',
                   fontSize: '1rem',
@@ -253,7 +252,7 @@ export default function ChatPage() {
                 disabled={loading || !question.trim()}
                 style={{
                   padding: '1.25rem 2rem',
-                  background: 'linear-gradient(135deg, #654321, #D2B48C)',
+                  background: '#006400',
                   color: 'white',
                   fontWeight: '600',
                   borderRadius: '1.5rem',

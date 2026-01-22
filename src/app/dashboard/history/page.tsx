@@ -32,8 +32,8 @@ export default function History() {
     return (
       <div className="max-w-4xl mx-auto p-8">
         <div className="text-center py-16">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
-          <p>Loading chat history...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-300 mx-auto mb-4"></div>
+          <p className="text-white">Loading chat history...</p>
         </div>
       </div>
     );
@@ -42,10 +42,10 @@ export default function History() {
   return (
     <div className="max-w-4xl mx-auto p-8">
       <div className="mb-8">
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
+        <h1 className="text-4xl font-bold bg-clip-text text-green-300 mb-4">
           📚 Chat History
         </h1>
-        <p className="text-xl text-gray-600">Your recent conversations with AI Assistant</p>
+        <p className="text-xl text-white">Your recent conversations with AI Assistant</p>
       </div>
 
       {conversations.length === 0 ? (

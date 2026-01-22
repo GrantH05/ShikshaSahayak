@@ -1,4 +1,5 @@
-'use client';
+'use client'; 
+import laptopBg from '../../lib/1500x900_343237-school-education-teacher1440.jpg';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import LanguageToggle from '../../../components/LanguageToggle';
@@ -6,7 +7,7 @@ import { useLanguage } from '../../lib/language-context';
 
 const translations = {
   en: {
-    title: '👨‍🏫 Teacher Assistant',
+    title: '📚️ EduSaarthi',
     subtitle: 'Login with your teacher account',
     email: 'Email',
     emailPlaceholder: 'teacher@school.com',
@@ -23,7 +24,7 @@ const translations = {
     }
   },
   hi: {
-    title: '👨‍🏫 शिक्षक सहायक',
+    title: '📚️ एडुसारथी',
     subtitle: 'अपने शिक्षक खाते से लॉगिन करें',
     email: 'ईमेल',
     emailPlaceholder: 'teacher@school.com',
@@ -86,68 +87,79 @@ export default function LoginPage() {
   return (
     <div style={{
       minHeight: '100vh',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      backgroundImage: `url(${laptopBg.src})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      backgroundAttachment: 'fixed',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       padding: '2rem',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
+      fontFamily: 'system-ui, -apple-system, sans-serif',
+      position: 'relative'
     }}>
+      {/* Dark overlay for readability */}
       <div style={{
-        background: 'rgba(255, 255, 255, 0.95)',
+        position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
+        background: 'rgba(0, 0, 0, 0.4)', zIndex: 1
+      }} />
+
+      {/* MAIN LOGIN CONTAINER */}
+      <div style={{
         backdropFilter: 'blur(20px)',
         padding: '3rem 3.5rem',
-        borderRadius: '2.5rem',
-        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        width: '100%',
-        maxWidth: '450px',
-        border: '1px solid rgba(255, 255, 255, 0.2)'
+        borderRadius: '1.5rem',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+        width: '100%', maxWidth: '850px',
+        border: '1px solid rgba(255, 255, 255, 0.3)',
+        position: 'relative', zIndex: 2
       }}>
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h1 style={{
-            fontSize: '2.75rem',
-            fontWeight: 'bold',
-            background: 'linear-gradient(135deg, #667eea, #764ba2)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            marginBottom: '1rem',
-            lineHeight: '1.2'
-          }}>
-            {t.title}
-          </h1>
-          <p style={{ color: '#64748b', fontSize: '1.15rem', margin: 0 }}>
-            {t.subtitle}
-          </p>
-          <div style={{ marginTop: '1.5rem' }}>
-            <LanguageToggle />
+      
+        {/* Two column layout */}
+        <div style={{ display: 'flex', gap: '3rem', alignItems: 'flex-start' }}>
+          {/* Left side - Header */}
+          <div style={{ flex: '0 0 310px' }}>
+            <h1 style={{
+              fontSize: '2.75rem',
+              fontWeight: 'bold',
+              color: 'white',  // ✅ Pure white text
+              textShadow: '0 2px 4px rgba(0,0,0,0.3)',  // ✅ Subtle shadow for definition
+              marginBottom: '1rem',
+              lineHeight: '1.2'
+            }}>
+              {t.title}
+            </h1>
+            <p style={{ color: '#ffffff', fontSize: '0.95rem', margin: 0, textAlign: 'left', marginBottom: '1.5rem' }}>
+              {t.subtitle}
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+              <LanguageToggle />
+            </div>
           </div>
-        </div>
 
-        {/* Error */}
-        {error && (
-          <div style={{
-            background: '#fee2e2',
-            color: '#dc2626',
-            padding: '1.25rem',
-            borderRadius: '1rem',
-            marginBottom: '2rem',
-            borderLeft: '5px solid #dc2626',
-            boxShadow: '0 4px 12px rgba(220, 38, 38, 0.15)'
-          }}>
-            {error}
-          </div>
-        )}
+          {/* Right side - Form */}
+          <div style={{ flex: 1 }}>
+            {/* Error */}
+            {error && (
+              <div style={{
+                background: '#fee2e2', color: '#dc2626',
+                padding: '1rem', borderRadius: '0.75rem',
+                marginBottom: '1.5rem', borderLeft: '4px solid #dc2626',
+                boxShadow: '0 4px 12px rgba(220, 38, 38, 0.15)',
+                fontSize: '0.9rem'
+              }}>
+                {error}
+              </div>
+            )}
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
+            {/* Form */}
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
           <div>
             <label style={{ 
-              display: 'block', 
-              marginBottom: '0.75rem', 
-              fontWeight: '600', 
-              color: '#374151',
-              fontSize: '1.05rem'
+              display: 'block', marginBottom: '0.5rem', 
+              fontWeight: '600', color: '#000',
+              fontSize: '0.95rem'
             }}>
               {t.email}
             </label>
@@ -160,24 +172,23 @@ export default function LoginPage() {
               disabled={loading}
               style={{
                 width: '100%',
-                padding: '1.25rem 1.5rem',
-                border: '2px solid #e5e7eb',
-                borderRadius: '1.25rem',
-                fontSize: '1.05rem',
-                transition: 'all 0.25s',
+                padding: '1rem 1.25rem',
+                border: 'none',
+                borderRadius: '0.75rem',
+                fontSize: '1rem',
+                transition: 'all 0.2s',
                 outline: 'none',
-                background: 'white',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                background: 'rgba(255, 255, 255, 0.6)',
+                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
+                color: '#000'
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#3b82f6';
-                e.target.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.1)';
-                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.background = 'rgba(255, 255, 255, 0.9)';
+                e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
               }}
               onBlur={(e) => {
-                e.target.style.borderColor = '#e5e7eb';
-                e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
-                e.target.style.transform = 'translateY(0)';
+                e.target.style.background = 'rgba(255, 255, 255, 0.6)';
+                e.target.style.boxShadow = 'inset 0 2px 4px rgba(0,0,0,0.05)';
               }}
             />
           </div>
@@ -185,10 +196,10 @@ export default function LoginPage() {
           <div>
             <label style={{ 
               display: 'block', 
-              marginBottom: '0.75rem', 
+              marginBottom: '0.5rem', 
               fontWeight: '600', 
-              color: '#374151',
-              fontSize: '1.05rem'
+              color: '#000',
+              fontSize: '0.95rem'
             }}>
               {t.password}
             </label>
@@ -201,24 +212,23 @@ export default function LoginPage() {
               disabled={loading}
               style={{
                 width: '100%',
-                padding: '1.25rem 1.5rem',
-                border: '2px solid #e5e7eb',
-                borderRadius: '1.25rem',
-                fontSize: '1.05rem',
-                transition: 'all 0.25s',
+                padding: '1rem 1.25rem',
+                border: 'none',
+                borderRadius: '0.75rem',
+                fontSize: '1rem',
+                transition: 'all 0.2s',
                 outline: 'none',
-                background: 'white',
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+                background: 'rgba(255, 255, 255, 0.6)',
+                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)',
+                color: '#000'
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#3b82f6';
-                e.target.style.boxShadow = '0 0 0 4px rgba(59, 130, 246, 0.1)';
-                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.background = 'rgba(255, 255, 255, 0.9)';
+                e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
               }}
               onBlur={(e) => {
-                e.target.style.borderColor = '#e5e7eb';
-                e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
-                e.target.style.transform = 'translateY(0)';
+                e.target.style.background = 'rgba(255, 255, 255, 0.6)';
+                e.target.style.boxShadow = 'inset 0 2px 4px rgba(0,0,0,0.05)';
               }}
             />
           </div>
@@ -227,63 +237,44 @@ export default function LoginPage() {
             type="submit"
             disabled={loading || !email || !password}
             style={{
-              padding: '1.5rem 2rem',
-              background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+              padding: '1.25rem 2rem',
+              background: 'linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%)',
               color: 'white',
               border: 'none',
-              borderRadius: '1.25rem',
-              fontSize: '1.15rem',
-              fontWeight: '700',
+              borderRadius: '0.75rem',
+              fontSize: '1.05rem',
+              fontWeight: '600',
               cursor: loading || !email || !password ? 'not-allowed' : 'pointer',
-              boxShadow: '0 10px 25px rgba(59, 130, 246, 0.4)',
-              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 15px rgba(14, 165, 233, 0.3)',
+              transition: 'all 0.2s ease',
               opacity: loading || !email || !password ? 0.7 : 1,
               position: 'relative',
               overflow: 'hidden'
             }}
             onMouseOver={(e) => {
               if (!loading && email && password) {
-                e.currentTarget.style.transform = 'translateY(-3px)';
-                e.currentTarget.style.boxShadow = '0 15px 35px rgba(59, 130, 246, 0.5)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(14, 165, 233, 0.4)';
               }
             }}
             onMouseOut={(e) => {
               e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 10px 25px rgba(59, 130, 246, 0.4)';
+              e.currentTarget.style.boxShadow = '0 4px 15px rgba(14, 165, 233, 0.3)';
             }}
           >
             {loading ? (
               <>
-                <span style={{ marginRight: '1rem' }}>⏳</span>
+                <span style={{ marginRight: '0.75rem' }}>⏳</span>
                 {t.loggingIn}
               </>
             ) : (
               t.login
             )}
           </button>
-        </form>
-
-        {/* Demo Info */}
-        <div style={{ 
-          marginTop: '2rem', 
-          padding: '1.5rem', 
-          background: 'rgba(59, 130, 246, 0.1)', 
-          borderRadius: '1.25rem', 
-          textAlign: 'center',
-          border: '2px dashed rgba(59, 130, 246, 0.3)'
-        }}>
-          <div style={{ fontWeight: '700', fontSize: '1.1rem', color: '#1e40af', marginBottom: '0.5rem' }}>
-            {t.demoAccount}
-          </div>
-          <div style={{ color: '#1e40af', marginBottom: '0.25rem' }}>
-            📧 {t.demoEmail}
-          </div>
-          <div style={{ color: '#1e40af' }}>
-            🔑 {t.demoPassword}
+            </form>
           </div>
         </div>
       </div>
     </div>
   );
 }
-

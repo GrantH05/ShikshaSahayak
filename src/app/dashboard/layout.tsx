@@ -40,7 +40,7 @@ const theme = {
   secondary: '#10b981',
   accent: '#f59e0b',
   danger: '#ef4444',
-  surface: 'rgba(255, 255, 255, 0.9)',
+  surface: '#006400',
   glass: 'rgba(255, 255, 255, 0.25)',
   backdrop: 'rgba(255, 255, 255, 0.75)',
   shadows: {
@@ -119,8 +119,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       }}>
         <div style={{ 
           fontSize: '2rem', 
-          color: theme.primary,
-          background: theme.surface,
+          color: theme.surface,
+          background: "#abf7b1",
           padding: '2rem 4rem',
           borderRadius: theme.radius.card,
           boxShadow: theme.shadows.card
@@ -140,7 +140,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Sidebar - UNCHANGED */}
       <div style={{
         width: sidebarOpen ? '300px' : '85px',
-        background: `linear-gradient(145deg, rgba(15,23,42,0.95), rgba(30,41,59,0.95))`,
+        background: theme.surface,
         backdropFilter: 'blur(25px)',
         color: 'white',
         transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
@@ -166,7 +166,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             boxShadow: theme.shadows.card,
             flexShrink: 0
           }}>
-            👨‍🏫
+            📚️
           </div>
           {sidebarOpen && profile && (
             <div style={{ minWidth: 0 }}>
@@ -274,16 +274,15 @@ const BigHeader = ({ profile, t, theme }: any) => (
       <h1 style={{ 
         fontSize: '2.875rem', 
         fontWeight: '800', 
-        background: `linear-gradient(135deg, ${theme.primary}, ${theme.secondary})`,
+        color: '#abf7b1',
         WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
         margin: 0, 
         lineHeight: '1.15'
       }}>
         {t.dashboard}
       </h1>
       <p style={{ 
-        color: '#64748b', 
+        color: '#ffffff', 
         margin: '0.875rem 0 0 0',
         fontSize: '1.125rem',
         fontWeight: '500'
@@ -298,7 +297,7 @@ const BigHeader = ({ profile, t, theme }: any) => (
 // 🛠️ SMALL HEADER - Other Pages
 const SmallHeader = ({ t, theme }: any) => (
   <div style={{
-    background: theme.glass,
+    background: theme.surface,
     backdropFilter: 'blur(20px)',
     padding: '1rem 1.5rem',
     borderRadius: '16px',
@@ -309,7 +308,7 @@ const SmallHeader = ({ t, theme }: any) => (
     border: '1px solid rgba(255,255,255,0.3)',
     marginBottom: '1rem'
   }}>
-    <div style={{ fontSize: '1.25rem', fontWeight: '700', color: theme.primary }}>
+    <div style={{ fontSize: '1.75rem', color: "#abf7b1", fontWeight: '700'}}>
       {t.dashboard}
     </div>
     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>

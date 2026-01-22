@@ -48,12 +48,9 @@ export default function DashboardHome() {
       }}>
         <h2 style={{
           fontSize: '2.75rem',
+          color: "#ffffff",
           fontWeight: 'bold',
-          background: language === 'hi' 
-            ? 'linear-gradient(135deg, #ef4444, #f59e0b)' 
-            : 'linear-gradient(135deg, #10b981, #059669)',
           WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
           marginBottom: '1.25rem',
           lineHeight: '1.2'
         }}>
@@ -61,7 +58,7 @@ export default function DashboardHome() {
         </h2>
         <p style={{ 
           fontSize: '1.35rem', 
-          color: '#64748b', 
+          color: '#ffffff', 
           maxWidth: '600px',
           margin: '0 auto',
           lineHeight: '1.6'
@@ -78,7 +75,7 @@ export default function DashboardHome() {
         marginBottom: '3rem'
       }}>
         <div style={{
-          background: 'linear-gradient(135deg, #3b82f6, #60a5fa)',
+          background: '#abf7b1',
           color: 'white',
           padding: '2.5rem 2rem',
           borderRadius: '1.75rem',
@@ -88,14 +85,14 @@ export default function DashboardHome() {
           overflow: 'hidden'
         }}>
           <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>💬</div>
-          <h3 style={{ fontSize: '1.6rem', marginBottom: '0.5rem', fontWeight: '700' }}>
+          <h3 style={{ fontSize: '1.6rem', color : "#000000", marginBottom: '0.5rem', fontWeight: '700' }}>
             {t.chatTitle}
           </h3>
-          <p style={{ fontSize: '1.1rem', opacity: 0.95, margin: 0 }}>{t.chatDesc}</p>
+          <p style={{ fontSize: '1.1rem', color: "#000000", opacity: 0.95, margin: 0 }}>{t.chatDesc}</p>
         </div>
 
         <div style={{
-          background: 'linear-gradient(135deg, #10b981, #34d399)',
+          background: '#abf7b1',
           color: 'white',
           padding: '2.5rem 2rem',
           borderRadius: '1.75rem',
@@ -105,10 +102,10 @@ export default function DashboardHome() {
           overflow: 'hidden'
         }}>
           <div style={{ fontSize: '3.5rem', marginBottom: '1rem' }}>📚</div>
-          <h3 style={{ fontSize: '1.6rem', marginBottom: '0.5rem', fontWeight: '700' }}>
+          <h3 style={{ fontSize: '1.6rem', color: "#000000", marginBottom: '0.5rem', fontWeight: '700' }}>
             {t.historyTitle}
           </h3>
-          <p style={{ fontSize: '1.1rem', opacity: 0.95, margin: 0 }}>{t.historyDesc}</p>
+          <p style={{ fontSize: '1.1rem', color: "#000000", opacity: 0.95, margin: 0 }}>{t.historyDesc}</p>
         </div>
       </div>
 
@@ -124,7 +121,7 @@ export default function DashboardHome() {
           alignItems: 'center',
           gap: '2rem',
           padding: '2.5rem 3rem',
-          background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+          background: '#abf7b1',
           color: 'white',
           textDecoration: 'none',
           borderRadius: '2rem',
@@ -154,12 +151,13 @@ export default function DashboardHome() {
             <h3 style={{ 
               fontSize: '2rem', 
               fontWeight: '800', 
+              color: "#000000",
               marginBottom: '0.75rem',
               lineHeight: '1.2'
             }}>
               {language === 'hi' ? 'AI चैट शुरू करें' : 'Start AI Chat'}
             </h3>
-            <p style={{ fontSize: '1.2rem', margin: 0, opacity: 0.95 }}>
+            <p style={{ fontSize: '1.2rem', color: "#000000", margin: 0, opacity: 0.95 }}>
               {language === 'hi' ? 'कक्षा 1-5 के लिए तैयार पाठ योजनाएं' : 'Ready lesson plans for classes 1-5'}
             </p>
           </div>
@@ -170,7 +168,7 @@ export default function DashboardHome() {
           alignItems: 'center',
           gap: '2rem',
           padding: '2.5rem 3rem',
-          background: 'linear-gradient(135deg, #10b981, #059669)',
+          background: '#abf7b1',
           color: 'white',
           textDecoration: 'none',
           borderRadius: '2rem',
@@ -199,13 +197,14 @@ export default function DashboardHome() {
           <div>
             <h3 style={{ 
               fontSize: '2rem', 
+              color: "#000000",
               fontWeight: '800', 
               marginBottom: '0.75rem',
               lineHeight: '1.2'
             }}>
               {language === 'hi' ? 'पिछली बातचीत देखें' : 'View Previous Conversations'}
             </h3>
-            <p style={{ fontSize: '1.2rem', margin: 0, opacity: 0.95 }}>
+            <p style={{ fontSize: '1.2rem', color: "#000000", margin: 0, opacity: 0.95 }}>
               {language === 'hi' ? 'सभी AI सुझाव एक जगह' : 'All AI suggestions in one place'}
             </p>
           </div>

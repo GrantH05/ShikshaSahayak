@@ -140,7 +140,7 @@ export default function ProfilePage() {
         alignItems: 'center', 
         justifyContent: 'center',
         fontSize: '1.5rem',
-        color: '#64748b'
+        color: '#ffffff'
       }}>
         {t.loading}
       </div>
@@ -153,7 +153,7 @@ export default function ProfilePage() {
         <h2 style={{
           fontSize: '2.5rem',
           fontWeight: 'bold',
-          background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+          background: '#abf7b1',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent'
         }}>
@@ -260,7 +260,7 @@ export default function ProfilePage() {
           }}>
             {/* Stats */}
             <div style={{
-              background: 'linear-gradient(135deg, #fef3c7, #fde68a)',
+              background: '#abf7b1',
               padding: '2.5rem',
               borderRadius: '2rem',
               textAlign: 'center'
@@ -268,15 +268,15 @@ export default function ProfilePage() {
               <h3 style={{ 
                 fontSize: '1.75rem', 
                 marginBottom: '1.5rem',
-                color: '#92400e'
+                color: '#000000'
               }}>
                 📊
                 {t.stats}
               </h3>
-              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#b45309', marginBottom: '1rem' }}>
+              <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#000000', marginBottom: '1rem' }}>
                 {profile.totalChats}
               </div>
-              <p style={{ color: '#92400e', fontSize: '1.1rem' }}>
+              <p style={{ color: '#000000', fontSize: '1.1rem' }}>
                 {t.totalChats}
               </p>
             </div>
